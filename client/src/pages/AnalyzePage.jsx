@@ -32,7 +32,8 @@ const AnalyzePage = () => {
       setAnalysisResult(res.data);
     } catch (err) {
       console.error(err);
-      setError("Failed to analyze image. Ensure the server is running.");
+      const serverMessage = err.response?.data?.message || err.message;
+      setError(`Failed to analyze image: ${serverMessage}. Ensure the backend is running and you are logged in.`);
     } finally {
       setIsAnalyzing(false);
     }
