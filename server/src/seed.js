@@ -8,6 +8,35 @@ dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/crimelens';
 
+const INCIDENT_TYPES = [
+  { title: "Armed Robbery Attempt", priority: "critical", threat: "CRITICAL", score: 95 },
+  { title: "Public Intoxication", priority: "low", threat: "LOW", score: 25 },
+  { title: "Unattended Property", priority: "medium", threat: "MEDIUM", score: 45 },
+  { title: "Unauthorized Entry", priority: "high", threat: "HIGH", score: 75 },
+  { title: "Traffic Disturbance", priority: "low", threat: "MINIMAL", score: 10 },
+  { title: "Vandalism Detected", priority: "medium", threat: "MEDIUM", score: 50 },
+  { title: "Suspicious Gathering", priority: "medium", threat: "MEDIUM", score: 55 },
+  { title: "Weapon Discharge Detected", priority: "critical", threat: "CRITICAL", score: 98 },
+  { title: "Illegal Dumping", priority: "low", threat: "LOW", score: 30 },
+  { title: "Nighttime Loitering", priority: "medium", threat: "MEDIUM", score: 40 },
+  { title: "Narcotics Activity Suspected", priority: "high", threat: "HIGH", score: 80 },
+  { title: "Assault in Progress", priority: "critical", threat: "CRITICAL", score: 92 },
+  { title: "Shoplifting Alert", priority: "medium", threat: "MEDIUM", score: 48 },
+  { title: "Stolen Vehicle Recovery", priority: "high", threat: "HIGH", score: 70 },
+  { title: "Structural Anomaly Detected", priority: "medium", threat: "LOW", score: 35 }
+];
+
+const OBJECTS = [
+  { class: 'person', category: 'people' },
+  { class: 'knife', category: 'weapons' },
+  { class: 'gun', category: 'weapons' },
+  { class: 'backpack', category: 'objects' },
+  { class: 'cell phone', category: 'objects' },
+  { class: 'car', category: 'vehicles' },
+  { class: 'motorcycle', category: 'vehicles' },
+  { class: 'bottle', category: 'objects' }
+];
+
 async function seed() {
   try {
     await mongoose.connect(MONGODB_URI);
@@ -33,63 +62,104 @@ async function seed() {
       role: "analyst"
     });
 
-    console.log('Created Users');
+    console.log('Users initialized');
 
-    // Mocks for maps and dashboards ...
-    // Creating some analyses
-    const locCenter = [-74.0060, 40.7128]; // NYC coordinates roughly
-    
-    const a1 = await Analysis.create({
-      imageUrl: '/placeholder.jpg',
-      originalFilename: 'alley_cam1.jpg',
-      detections: [{ class: 'person', confidence: 0.9, category: 'people', bbox: { x:10, y:10, w:100, h:200 } }],
-      forensicReport: {
-        threatAssessment: { level: 'MEDIUM', score: 55 }
-      },
-      threatScore: 55,
-      threatLevel: 'MEDIUM',
-      location: { type: 'Point', coordinates: [locCenter[0] + 0.01, locCenter[1] + 0.01] },
-      analyzedBy: analyst._id
-    });
+    const locCenter = [-73.985, 40.758]; // Times Square center
 
-    const a2 = await Analysis.create({
-      imageUrl: '/placeholder.jpg',
-      originalFilename: 'street_fight.jpg',
-      detections: [
-        { class: 'person', confidence: 0.9, category: 'people', bbox: { x:10, y:10, w:100, h:200 } },
-        { class: 'knife', confidence: 0.8, category: 'weapons', bbox: { x:120, y:10, w:20, h:40 } }
-      ],
-      forensicReport: {
-        threatAssessment: { level: 'CRITICAL', score: 95 }
-      },
-      threatScore: 95,
-      threatLevel: 'CRITICAL',
-      location: { type: 'Point', coordinates: [locCenter[0] - 0.01, locCenter[1] - 0.01] },
-      analyzedBy: analyst._id
-    });
+    // Pre-define 3 "Hotspot" zones for clustering
+    const zones = [
+      { lng: locCenter[0] + 0.005, lat: locCenter[1] + 0.005, name: "Times Square Cluster" },
+      { lng: locCenter[0] - 0.012, lat: locCenter[1] + 0.008, name: "Hell's Kitchen Zone" },
+      { lng: locCenter[0] + 0.008, lat: locCenter[1] - 0.015, name: "Transit Hub Corridor" }
+    ];
 
-    // Create cases
-    const c1 = await Case.create({
-      title: "Downtown Alley Disturbance",
-      description: "Report of suspicious activity in lower Manhattan alleys.",
-      status: "open",
-      priority: "high",
-      analyses: [a1._id, a2._id],
-      createdBy: admin._id
-    });
+    // Generate 15 Cases and associated Analyses
+    for (let i = 0; i < 15; i++) {
+      const type = INCIDENT_TYPES[i % INCIDENT_TYPES.length];
+      
+      const newCase = await Case.create({
+        title: `${type.title} - Investigation #${1000 + i}`,
+        description: `automated forensic analysis relating to a ${type.title} incident in the local quadrant.`,
+        status: i % 4 === 0 ? 'investigating' : (i % 5 === 0 ? 'closed' : 'open'),
+        priority: type.priority,
+        createdBy: admin._id
+      });
 
-    // Link case
-    a1.caseId = c1._id;
-    a2.caseId = c1._id;
-    await a1.save();
-    await a2.save();
+      // Create 1-2 analyses for each case
+      const analysisCount = Math.floor(Math.random() * 2) + 1;
+      const analysisIds = [];
 
-    console.log('Created Mock Data');
+      for (let j = 0; j < analysisCount; j++) {
+        const threatLevel = type.threat;
+        const threatScore = Math.min(100, Math.max(0, type.score + (Math.random() * 10 - 5)));
+        
+        // Pick location: 60% chance to be in a hotspot, 40% random
+        let location;
+        if (Math.random() < 0.6) {
+          const zone = zones[Math.floor(Math.random() * zones.length)];
+          location = [
+            zone.lng + (Math.random() * 0.004 - 0.002), // Very tight cluster
+            zone.lat + (Math.random() * 0.004 - 0.002)
+          ];
+        } else {
+          location = [
+            locCenter[0] + (Math.random() * 0.04 - 0.02),
+            locCenter[1] + (Math.random() * 0.04 - 0.02)
+          ];
+        }
+
+        // Random detections
+        const detCount = Math.floor(Math.random() * 3) + 1;
+        const detections = [];
+        for (let k = 0; k < detCount; k++) {
+          const obj = OBJECTS[Math.floor(Math.random() * OBJECTS.length)];
+          detections.push({
+            class: obj.class,
+            category: obj.category,
+            confidence: Number((0.7 + Math.random() * 0.25).toFixed(2)),
+            bbox: { 
+              x: Math.floor(Math.random() * 500), 
+              y: Math.floor(Math.random() * 400), 
+              w: 50 + Math.floor(Math.random() * 100), 
+              h: 50 + Math.floor(Math.random() * 100) 
+            }
+          });
+        }
+
+        const analysis = await Analysis.create({
+          imageUrl: '/placeholder.jpg',
+          originalFilename: `cam_${i}_${j}.jpg`,
+          detections: detections,
+          forensicReport: {
+            sceneOverview: `Automated detection system flagged a ${type.title} pattern.`,
+            detectedElements: detections.map(d => d.class),
+            anomalyAnalysis: ["Movement pattern mismatch", "Object contrast anomaly"],
+            threatAssessment: { level: threatLevel, score: Math.round(threatScore) }
+          },
+          threatScore: Math.round(threatScore),
+          threatLevel: threatLevel,
+          location: { 
+            type: 'Point', 
+            coordinates: location
+          },
+          analyzedBy: analyst._id,
+          caseId: newCase._id
+        });
+
+        analysisIds.push(analysis._id);
+      }
+
+      newCase.analyses = analysisIds;
+      await newCase.save();
+    }
+
+    console.log('Successfully seeded 15 cases and associated forensic analyses.');
     process.exit(0);
   } catch (error) {
-    console.error(error);
+    console.error('Seeding failed:', error);
     process.exit(1);
   }
 }
 
 seed();
+
