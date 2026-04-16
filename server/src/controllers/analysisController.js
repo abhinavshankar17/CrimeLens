@@ -29,6 +29,15 @@ const analyze = async (req, res) => {
     // 3. Gemini Forensic Analysis
     const forensicReport = await analyzeScene(imageBase64, mimeType, detections);
 
+    // Provide refined names back onto the detections array to resolve YOLO hallucinations!
+    if (forensicReport.refinedClassNames && forensicReport.refinedClassNames.length === detections.length) {
+      detections.forEach((det, index) => {
+        det.class = forensicReport.refinedClassNames[index] || det.class;
+        // Optionally update category based on new class in a real app, 
+        // but for now fixing the class string resolves the hallucination.
+      });
+    }
+
     // 4. Calculate Threat Score
     const { score, level } = calculateThreatScore(detections, forensicReport);
 

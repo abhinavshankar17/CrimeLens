@@ -7,11 +7,11 @@ const AnnotatedViewer = ({ imageUrl, detections }) => {
 
   const getCategoryColor = (category) => {
     switch (category) {
-      case 'weapons': return 'var(--threat-critical)'; // Red
-      case 'people': return 'var(--accent-blue)';
-      case 'vehicles': return 'var(--threat-low)'; // Green
-      case 'objects': return 'var(--threat-medium)'; // Yellow
-      default: return 'var(--text-muted)'; // Gray
+      case 'weapons': return '#ef4444'; // Red (--threat-critical)
+      case 'people': return '#06b6d4'; // Cyan (--accent-cyan) or Blue
+      case 'vehicles': return '#22c55e'; // Green (--threat-low)
+      case 'objects': return '#eab308'; // Yellow (--threat-medium)
+      default: return '#a0a0b8'; // Gray (--text-muted)
     }
   };
 

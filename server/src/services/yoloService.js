@@ -31,7 +31,6 @@ function generateMockDetections(imageWidth = 800, imageHeight = 600) {
     { class: 'person', confidence: 0.92, category: 'people' },
     { class: 'person', confidence: 0.87, category: 'people' },
     { class: 'knife', confidence: 0.78, category: 'weapons' },
-    { class: 'car', confidence: 0.95, category: 'vehicles' },
     { class: 'backpack', confidence: 0.84, category: 'objects' },
     { class: 'cell phone', confidence: 0.71, category: 'objects' },
     { class: 'bottle', confidence: 0.68, category: 'objects' },

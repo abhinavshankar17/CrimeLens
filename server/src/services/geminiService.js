@@ -28,6 +28,7 @@ Generate a comprehensive forensic analysis in the following EXACT JSON format. B
 {
   "sceneOverview": "Detailed 3-5 sentence description of an apparent scene based on visuals...",
   "detectedElements": ["Array of strings describing the significance of the objects visually observed..."],
+  "refinedClassNames": ["Array of corrected object names corresponding 1:1 with the provided DETECTION CONTEXT items. For example, if YOLO incorrectly detected a 'car' on a person's pants, correct it to 'pants' or 'person'. Maintain the exact same array length."],
   "anomalyAnalysis": ["Array of strings describing something unusual visually present"],
   "forensicInterpretation": "A narrative reconstruction of what likely occurred.",
   "threatAssessment": {
@@ -81,6 +82,7 @@ function getMockAnalysis() {
   return {
     "sceneOverview": "This is a mock analysis generated because the Groq API key failed. The scene appears to involve a dimly lit alleyway during nighttime.",
     "detectedElements": ["A dark sedan parked erratically on the right side.", "A discarded backpack near the left wall."],
+    "refinedClassNames": [],
     "anomalyAnalysis": ["The car doors are left open, suggesting a hasty departure or confrontation."],
     "forensicInterpretation": "Given the open vehicle doors and discarded items, a sudden altercation or rapid escape likely occurred.",
     "threatAssessment": { "level": "HIGH", "score": 75, "factors": ["Abandoned vehicle in suspicious state"] },
