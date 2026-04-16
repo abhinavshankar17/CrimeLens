@@ -6,8 +6,8 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:yolo\"",
     "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",
-    "dev:yolo": "cd yolo-service && venv\\Scripts\\activate && python app.py",
-    "install:all": "cd client && npm install && cd ../server && npm install && cd ../yolo-service && python -m venv venv && venv\\Scripts\\activate && pip install -r requirements.txt"
+    "dev:yolo": "cd yolo-service && python app.py",
+    "install:all": "cd client && npm install && cd ../server && npm install && cd ../yolo-service && pip install -r requirements.txt"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

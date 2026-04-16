@@ -76,7 +76,7 @@ async function seed() {
     // Generate 15 Cases and associated Analyses
     for (let i = 0; i < 15; i++) {
       const type = INCIDENT_TYPES[i % INCIDENT_TYPES.length];
-      
+
       const newCase = await Case.create({
         title: `${type.title} - Investigation #${1000 + i}`,
         description: `automated forensic analysis relating to a ${type.title} incident in the local quadrant.`,
@@ -92,7 +92,7 @@ async function seed() {
       for (let j = 0; j < analysisCount; j++) {
         const threatLevel = type.threat;
         const threatScore = Math.min(100, Math.max(0, type.score + (Math.random() * 10 - 5)));
-        
+
         // Pick location: 60% chance to be in a hotspot, 40% random
         let location;
         if (Math.random() < 0.6) {
@@ -117,11 +117,11 @@ async function seed() {
             class: obj.class,
             category: obj.category,
             confidence: Number((0.7 + Math.random() * 0.25).toFixed(2)),
-            bbox: { 
-              x: Math.floor(Math.random() * 500), 
-              y: Math.floor(Math.random() * 400), 
-              w: 50 + Math.floor(Math.random() * 100), 
-              h: 50 + Math.floor(Math.random() * 100) 
+            bbox: {
+              x: Math.floor(Math.random() * 500),
+              y: Math.floor(Math.random() * 400),
+              w: 50 + Math.floor(Math.random() * 100),
+              h: 50 + Math.floor(Math.random() * 100)
             }
           });
         }
@@ -138,8 +138,8 @@ async function seed() {
           },
           threatScore: Math.round(threatScore),
           threatLevel: threatLevel,
-          location: { 
-            type: 'Point', 
+          location: {
+            type: 'Point',
             coordinates: location
           },
           analyzedBy: analyst._id,

@@ -9,15 +9,22 @@ async function detectObjects(imagePath, filename) {
     const formData = new FormData();
     formData.append('image', fs.createReadStream(imagePath), filename);
     
-    // Set a short timeout so we fallback quickly if Python isn't running
+    // Set a longer timeout as model inference (especially cold start) can take time
     const response = await axios.post(`${yoloUrl}/detect`, formData, {
       headers: formData.getHeaders(),
-      timeout: 3000 
+      timeout: 10000 
     });
     
     return response.data;
   } catch (error) {
-    console.log("YOLO service unavailable, falling back to mock detections.");
+    console.error("YOLO Service Error Details:", error.code || error.message);
+    if (error.code === 'ECONNREFUSED') {
+       console.log("CRITICAL: YOLO Python service is not running on", yoloUrl);
+    } else if (error.code === 'ETIMEDOUT' || error.message.includes('timeout')) {
+       console.log("CRITICAL: YOLO service timed out (inference took longer than 10s)");
+    }
+    
+    console.log("Falling back to mock detections for UI continuity.");
     return {
       detections: generateMockDetections(),
       imageWidth: 800,
