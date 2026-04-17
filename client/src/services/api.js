@@ -33,8 +33,20 @@ export const analysisService = {
 export const caseService = {
   getAll: (params) => api.get('/cases', { params }),
   getById: (id) => api.get(`/cases/${id}`),
-  create: (data) => api.post('/cases', data),
-  update: (id, data) => api.put(`/cases/${id}`, data),
+  create: (data) => {
+    const isFormData = data && typeof data.append === 'function';
+    if (isFormData) {
+      return api.post('/cases', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+    }
+    return api.post('/cases', data);
+  },
+  update: (id, data) => {
+    const isFormData = data && typeof data.append === 'function';
+    if (isFormData) {
+      return api.put(`/cases/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+    }
+    return api.put(`/cases/${id}`, data);
+  },
   delete: (id) => api.delete(`/cases/${id}`),
   addEvidence: (id, analysisId) => api.post(`/cases/${id}/evidence`, { analysisId }),
   addNote: (id, content) => api.post(`/cases/${id}/notes`, { content }),

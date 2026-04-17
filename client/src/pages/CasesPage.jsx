@@ -3,12 +3,14 @@ import CaseCard from '../components/CaseCard';
 import { caseService } from '../services/api';
 import { FileQuestion, Plus } from 'lucide-react';
 import StatusDropdown from '../components/StatusDropdown';
+import NewCaseModal from '../components/NewCaseModal';
 
 const CasesPage = () => {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCases();
@@ -29,6 +31,16 @@ const CasesPage = () => {
     }
   };
 
+  const handleCreateCase = async (data) => {
+    try {
+      await caseService.create(data);
+      fetchCases(); // Refresh list
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
   return (
     <div className="grid-container">
       <div className="page-header">
@@ -36,7 +48,7 @@ const CasesPage = () => {
           <h1 className="page-title">Investigation Cases</h1>
           <p className="page-subtitle">Manage ongoing criminal investigations and evidence compilation.</p>
         </div>
-        <button className="btn-primary">
+        <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
           <Plus size={18} /> New Case
         </button>
       </div>
@@ -85,6 +97,13 @@ const CasesPage = () => {
           {cases.map(c => <CaseCard key={c._id} c={c} />)}
         </div>
       )}
+
+      {/* New Case Modal */}
+      <NewCaseModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSuccess={handleCreateCase}
+      />
     </div>
   );
 };

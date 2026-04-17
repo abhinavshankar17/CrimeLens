@@ -5,6 +5,7 @@ const caseSchema = new mongoose.Schema({
   description: String,
   status: { type: String, enum: ['open', 'investigating', 'closed'], default: 'open' },
   priority: { type: String, enum: ['critical', 'high', 'medium', 'low'], default: 'medium' },
+  imageUrl: String,
   analyses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Analysis' }],
   notes: [{
     content: String,
