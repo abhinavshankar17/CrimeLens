@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL;
+  // Fallback to current host but port 5000 for local network mobile testing
+  const hostname = window.location.hostname;
+  return `http://${hostname}:5000/api`;
+};
+
+const API_URL = getBaseUrl();
+
 
 const api = axios.create({
   baseURL: API_URL,
@@ -24,7 +32,11 @@ export const analysisService = {
   analyze: (formData) => api.post('/analysis/analyze', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
+  monitor: (formData) => api.post('/analysis/monitor', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
   getAll: (params) => api.get('/analysis', { params }),
+
   getById: (id) => api.get(`/analysis/${id}`),
   getStats: () => api.get('/analysis/stats'),
   getPatterns: () => api.get('/analysis/patterns'),

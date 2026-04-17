@@ -23,7 +23,9 @@ const upload = multer({
 router.use(authMiddleware);
 
 router.post('/analyze', upload.single('image'), analysisController.analyze);
+router.post('/monitor', upload.single('image'), analysisController.monitor);
 router.get('/', analysisController.getAnalyses);
+
 router.get('/stats', analysisController.getStats);
 router.get('/patterns', analysisController.getPatterns);
 router.get('/:id', analysisController.getAnalysisById);

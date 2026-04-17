@@ -92,4 +92,75 @@ function getMockAnalysis() {
   };
 }
 
-module.exports = { analyzeScene };
+async function analyzeLive(imageBase64, mimeType) {
+  if (!groq && process.env.GROQ_API_KEY) {
+    groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  }
+
+  if (!groq) {
+    console.error("analyzeLive: No GROQ client - API key missing");
+    return { alert: false, crimeType: "None", confidence: 0, description: "AI service not configured" };
+  }
+
+  // Use the SAME model that works for the analyze page
+  const model = process.env.GROQ_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+  console.log(`[LiveMonitor] Sending frame to model: ${model}, image size: ${imageBase64.length} chars`);
+
+  try {
+    const prompt = `Look at this image carefully. Is there any crime or dangerous activity happening?
+
+Check for:
+- Fighting or physical assault (people hitting, grappling, kicking each other)
+- Theft or robbery (someone grabbing another person's belongings)  
+- Weapons being used or brandished (knives, guns, bats)
+- Someone injured or unconscious on the ground
+- Any other criminal or suspicious activity
+
+You MUST respond with ONLY this JSON, nothing else:
+{"alert": true_or_false, "crimeType": "Attack" or "Theft" or "Murder" or "Weapons" or "Suspicious" or "None", "confidence": number_0_to_100, "description": "what you see", "recommendedAction": "what to do"}`;
+
+    const chatCompletion = await groq.chat.completions.create({
+      model: model,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: prompt },
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:${mimeType};base64,${imageBase64}`,
+              },
+            },
+          ]
+        },
+      ],
+      temperature: 0.3,
+      max_tokens: 300
+    });
+
+    const textResponse = chatCompletion.choices[0].message.content;
+    console.log(`[LiveMonitor] Raw AI response: ${textResponse}`);
+    
+    // Extract JSON from the response
+    const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error("[LiveMonitor] No JSON found in response");
+      return { alert: false, crimeType: "None", confidence: 0, description: "AI returned non-JSON response" };
+    }
+    
+    const parsed = JSON.parse(jsonMatch[0]);
+    console.log(`[LiveMonitor] Parsed result: alert=${parsed.alert}, type=${parsed.crimeType}, conf=${parsed.confidence}`);
+    return parsed;
+
+  } catch (error) {
+    console.error("[LiveMonitor] API call failed:", error.message);
+    if (error.error) console.error("[LiveMonitor] Error details:", JSON.stringify(error.error));
+    return { alert: false, crimeType: "None", confidence: 0, description: `API error: ${error.message}` };
+  }
+}
+
+
+
+module.exports = { analyzeScene, analyzeLive };
+

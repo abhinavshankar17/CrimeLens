@@ -8,6 +8,8 @@ import CrimeMapPage from './pages/CrimeMapPage';
 import CasesPage from './pages/CasesPage';
 import DashboardPage from './pages/DashboardPage';
 import CaseDetailPage from './pages/CaseDetailPage';
+import LiveMonitoringPage from './pages/LiveMonitoringPage';
+
 
 import './App.css';
 
@@ -34,7 +36,9 @@ const AppRoutes = () => {
           <Route path="/map" element={<CrimeMapPage />} />
           <Route path="/cases" element={<CasesPage />} />
           <Route path="/cases/:id" element={<CaseDetailPage />} />
+          <Route path="/monitoring" element={<LiveMonitoringPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+
         </Routes>
       </main>
     </div>

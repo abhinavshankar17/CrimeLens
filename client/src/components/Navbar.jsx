@@ -15,9 +15,13 @@ const Navbar = () => {
         <NavLink to="/analyze" className="nav-link" style={{display: 'flex', gap:'8px', alignItems:'center'}}>
           <Activity size={18} /> Analyze
         </NavLink>
+        <NavLink to="/monitoring" className="nav-link" style={{display: 'flex', gap:'8px', alignItems:'center'}}>
+          <ScanEye size={18} /> Live Monitor
+        </NavLink>
         <NavLink to="/map" className="nav-link" style={{display: 'flex', gap:'8px', alignItems:'center'}}>
           <Map size={18} /> Crime Map
         </NavLink>
+
         <NavLink to="/cases" className="nav-link" style={{display: 'flex', gap:'8px', alignItems:'center'}}>
           <FolderKanban size={18} /> Cases
         </NavLink>

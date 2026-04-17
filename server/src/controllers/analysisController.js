@@ -1,7 +1,8 @@
 const Analysis = require('../models/Analysis');
 const Case = require('../models/Case');
 const { detectObjects } = require('../services/yoloService');
-const { analyzeScene } = require('../services/geminiService');
+const { analyzeScene, analyzeLive } = require('../services/geminiService');
+
 const { calculateThreatScore } = require('../services/scoringService');
 const fs = require('fs');
 
@@ -197,4 +198,40 @@ const getPatterns = async (req, res) => {
   }
 };
 
-module.exports = { analyze, getAnalyses, getAnalysisById, getStats, getPatterns };
+const monitor = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'No frame provided' });
+
+    const imagePath = req.file.path;
+    const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' });
+    const mimeType = req.file.mimetype;
+
+    // Direct AI analysis for efficiency in monitoring
+    const result = await analyzeLive(imageBase64, mimeType);
+
+    // Safety Override: Some models are hesitant to set 'alert: true' due to safety filters
+    // if a major crime is detected with enough confidence, we force the alert.
+    const criticalCrimes = ['Attack', 'Murder', 'Theft', 'Weapons'];
+    if (!result.alert && criticalCrimes.includes(result.crimeType) && result.confidence > 40) {
+      result.alert = true;
+      if (!result.description) result.description = `Detected potential ${result.crimeType} activity.`;
+    }
+
+    console.log(`Live Monitor Scan: ${result.crimeType} (Alert: ${result.alert}, Conf: ${result.confidence}%)`);
+
+    // Clean up frame file immediately
+
+    fs.unlink(imagePath, (err) => {
+      if (err) console.error('Error deleting frame sample:', err);
+    });
+
+    res.json(result);
+  } catch (error) {
+    console.error('Monitoring error:', error);
+    res.status(500).json({ message: 'Monitoring failed', error: error.message, stack: error.stack });
+  }
+
+};
+
+module.exports = { analyze, getAnalyses, getAnalysisById, getStats, getPatterns, monitor };
+
