@@ -206,11 +206,9 @@ const monitor = async (req, res) => {
     const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' });
     const mimeType = req.file.mimetype;
 
-    // Direct AI analysis for efficiency in monitoring
     const result = await analyzeLive(imageBase64, mimeType);
 
-    // Safety Override: Some models are hesitant to set 'alert: true' due to safety filters
-    // if a major crime is detected with enough confidence, we force the alert.
+    // Safety Override
     const criticalCrimes = ['Attack', 'Murder', 'Theft', 'Weapons'];
     if (!result.alert && criticalCrimes.includes(result.crimeType) && result.confidence > 40) {
       result.alert = true;
@@ -219,8 +217,7 @@ const monitor = async (req, res) => {
 
     console.log(`Live Monitor Scan: ${result.crimeType} (Alert: ${result.alert}, Conf: ${result.confidence}%)`);
 
-    // Clean up frame file immediately
-
+    // Clean up frame file
     fs.unlink(imagePath, (err) => {
       if (err) console.error('Error deleting frame sample:', err);
     });
@@ -228,10 +225,11 @@ const monitor = async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Monitoring error:', error);
-    res.status(500).json({ message: 'Monitoring failed', error: error.message, stack: error.stack });
+    res.status(500).json({ message: 'Monitoring failed', error: error.message });
   }
-
 };
+
+
 
 module.exports = { analyze, getAnalyses, getAnalysisById, getStats, getPatterns, monitor };
 

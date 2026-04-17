@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { Shield, AlertTriangle, Play, Square, Eye, Radio, Terminal, History, Camera, RefreshCw } from 'lucide-react';
-
-
+import { Shield, AlertTriangle, Play, Square, Eye, Radio, Terminal, History, Camera, RefreshCw, FileDown } from 'lucide-react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import LiveMonitoringReport from '../components/LiveMonitoringReport';
 import { analysisService } from '../services/api';
+
 
 const LiveMonitoringPage = () => {
   const webcamRef = useRef(null);
@@ -12,10 +13,14 @@ const LiveMonitoringPage = () => {
   const [status, setStatus] = useState('Standby');
   const [lastScanResult, setLastScanResult] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
   const [facingMode, setFacingMode] = useState('environment');
+
   const [devices, setDevices] = useState([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState('');
   const [scanInterval, setScanInterval] = useState(3000);
+  const [sessionStart, setSessionStart] = useState(null);
+
 
   const handleDevices = useCallback((mediaDevices) => {
     const videoDevices = mediaDevices.filter(({ kind }) => kind === "videoinput");
@@ -65,22 +70,12 @@ const LiveMonitoringPage = () => {
     setStatus('Analyzing Frame...');
 
     try {
-      // Efficiency: Downscale frame locally to 640px before sending to reduce latency
-      const img = new Image();
-      img.src = rawSrc;
-      await new Promise(resolve => img.onload = resolve);
-      
-      const canvas = document.createElement('canvas');
-      const scale = 640 / img.width;
-      canvas.width = 640;
-      canvas.height = img.height * scale;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      const downscaledSrc = canvas.toDataURL('image/jpeg', 0.8);
-
-      const blob = dataURItoBlob(downscaledSrc);
+      // Send frame directly — react-webcam already compresses via screenshotQuality
+      const blob = dataURItoBlob(rawSrc);
       const formData = new FormData();
       formData.append('image', blob, 'frame.jpg');
+
+
 
       const res = await analysisService.monitor(formData);
       const result = res.data;
@@ -89,6 +84,8 @@ const LiveMonitoringPage = () => {
       setLastScanResult(result);
 
       if (result.alert) {
+        // Capture the current frame as a snapshot for the report
+        const snapshot = rawSrc;
         setAlerts(prev => [
           {
             id: Date.now(),
@@ -96,11 +93,13 @@ const LiveMonitoringPage = () => {
             type: result.crimeType,
             description: result.description,
             confidence: result.confidence,
-            action: result.recommendedAction
+            action: result.recommendedAction,
+            snapshot: snapshot
           },
-          ...prev.slice(0, 9)
+          ...prev.slice(0, 19) // Keep last 20 for the report
         ]);
         setStatus('THREAT DETECTED');
+
       } else {
         setStatus(`Clear — ${result.description || result.crimeType || 'Scanning...'}`);
       }
@@ -108,8 +107,16 @@ const LiveMonitoringPage = () => {
     } catch (err) {
       console.error('Monitoring scan error:', err);
       const msg = err.response?.data?.error || err.message;
-      setStatus(`Scan Failed: ${msg}`);
+      // Detect rate limiting and auto-pause
+      if (msg.includes('rate_limit') || msg.includes('429') || msg.includes('Rate limit')) {
+        setRateLimited(true);
+        setIsMonitoring(false);
+        setStatus('Rate limit reached — monitoring paused. Try again in a few minutes.');
+      } else {
+        setStatus(`Scan Failed: ${msg}`);
+      }
     } finally {
+
 
       setIsProcessing(false);
     }
@@ -132,8 +139,12 @@ const LiveMonitoringPage = () => {
     setIsMonitoring(!isMonitoring);
     if (!isMonitoring) {
       setAlerts([]);
+      setRateLimited(false);
+      setSessionStart(new Date().toLocaleString());
     }
   };
+
+
 
   return (
     <div className="grid-container" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', minHeight: 'calc(100vh - 100px)' }}>
@@ -155,7 +166,36 @@ const LiveMonitoringPage = () => {
           {isMonitoring ? <Square size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
           {isMonitoring ? 'Stop Monitoring' : 'Start Feed'}
         </button>
+        {alerts.length > 0 && (
+          <PDFDownloadLink
+            document={<LiveMonitoringReport alerts={alerts} sessionStart={sessionStart || ''} sessionEnd={new Date().toLocaleString()} />}
+            fileName={`CrimeLens_LiveReport_${Date.now()}.pdf`}
+            style={{ textDecoration: 'none' }}
+          >
+            {({ loading }) => (
+              <button
+                style={{
+                  background: 'linear-gradient(135deg, #059669, #10b981)',
+                  display: 'flex',
+                  gap: '0.5rem',
+                  alignItems: 'center',
+                  padding: '0.6rem 1.2rem',
+                  borderRadius: '8px',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                <FileDown size={18} />
+                {loading ? 'Generating...' : 'Download Report'}
+              </button>
+            )}
+          </PDFDownloadLink>
+        )}
       </div>
+
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.5rem', flex: 1 }}>
         {/* Feed View */}
@@ -234,6 +274,7 @@ const LiveMonitoringPage = () => {
               audio={false}
               ref={webcamRef}
               screenshotFormat="image/jpeg"
+              screenshotQuality={0.5}
               videoConstraints={videoConstraints}
               style={{
                 width: '100%',
@@ -244,6 +285,7 @@ const LiveMonitoringPage = () => {
                 transition: 'opacity 0.5s'
               }}
             />
+
 
 
           </div>
@@ -308,15 +350,21 @@ const LiveMonitoringPage = () => {
                 alerts.map(alert => (
                   <div key={alert.id} className="animate-slide-up" style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                      <span style={{ color: 'var(--threat-critical)', fontWeight: 'bold', fontSize: '0.85rem' }}>{alert.type.toUpperCase()}</span>
+                      <span style={{ color: 'var(--threat-critical)', fontWeight: 'bold', fontSize: '0.85rem' }}>{alert.type?.toUpperCase()}</span>
                       <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{alert.time}</span>
                     </div>
                     <p style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>{alert.description}</p>
-                    <div style={{ fontSize: '0.75rem', padding: '4px 8px', background: 'rgba(0,0,0,0.3)', borderRadius: '4px', color: 'var(--accent-cyan)' }}>
-                      <strong>Action:</strong> {alert.action}
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <div style={{ fontSize: '0.75rem', padding: '4px 8px', background: 'rgba(0,0,0,0.3)', borderRadius: '4px', color: 'var(--accent-cyan)', flex: 1 }}>
+                        <strong>Action:</strong> {alert.action}
+                      </div>
+                      {alert.snapshot && (
+                        <div style={{ fontSize: '0.6rem', padding: '3px 6px', background: 'rgba(34, 197, 94, 0.2)', borderRadius: '3px', color: '#22c55e' }}>📸 Captured</div>
+                      )}
                     </div>
                   </div>
                 ))
+
               )}
             </div>
           </div>
