@@ -6,6 +6,10 @@ import ThreatMeter from '../components/ThreatMeter';
 import ForensicReport from '../components/ForensicReport';
 import LoadingScanner from '../components/LoadingScanner';
 import { analysisService } from '../services/api';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import CaseReportPDF from '../components/CaseReportPDF';
+import { FileDown, Plus } from 'lucide-react';
+
 
 const AnalyzePage = () => {
   const [file, setFile] = useState(null);
@@ -57,9 +61,45 @@ const AnalyzePage = () => {
             <p className="page-subtitle">Upload scene imagery for instant automated assessment.</p>
           </div>
           {analysisResult && (
-            <button className="btn-primary" onClick={handleReset}>New Analysis</button>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <PDFDownloadLink 
+                document={<CaseReportPDF data={analysisResult} imageUrl={previewUrl} />} 
+                fileName={`Forensic_Report_${new Date().getTime()}.pdf`}
+                className="btn-primary"
+                style={{ textDecoration: 'none' }}
+              >
+                {({ loading }) => (
+                  <>
+                    <FileDown size={18} />
+                    {loading ? 'Preparing Report...' : 'Download Report'}
+                  </>
+                )}
+              </PDFDownloadLink>
+              <button 
+                className="btn-glass" 
+                onClick={handleReset}
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  padding: '12px 24px',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'var(--glass-bg)',
+                  border: '1px solid var(--glass-border)',
+                  color: 'var(--text-primary)',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  transition: 'all 0.3s'
+                }}
+              >
+                <Plus size={18} />
+                New Analysis
+              </button>
+            </div>
           )}
         </div>
+
 
         {error && (
           <div style={{ padding: '1rem', background: 'var(--threat-critical)', color: '#fff', borderRadius: 'var(--radius-md)' }}>
@@ -119,8 +159,15 @@ const AnalyzePage = () => {
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
+        .btn-glass:hover {
+          background: rgba(255, 255, 255, 0.08) !important;
+          border-color: var(--accent-cyan) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
       `}} />
     </div>
+
   );
 };
 
