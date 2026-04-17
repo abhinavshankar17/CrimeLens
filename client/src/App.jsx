@@ -7,8 +7,7 @@ import AnalyzePage from './pages/AnalyzePage';
 import CrimeMapPage from './pages/CrimeMapPage';
 import CasesPage from './pages/CasesPage';
 import DashboardPage from './pages/DashboardPage';
-// Placeholder for CaseDetail
-const CaseDetailPage = () => <div className="grid-container"><h1 className="page-title">Case details</h1></div>;
+import CaseDetailPage from './pages/CaseDetailPage';
 
 import './App.css';
 

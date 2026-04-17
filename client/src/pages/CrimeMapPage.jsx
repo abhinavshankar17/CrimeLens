@@ -128,12 +128,45 @@ const CrimeMapPage = () => {
                 }}
               >
                 <Popup>
-                  <div style={{ width: '200px' }}>
-                    <img src={analysis.imageUrl} alt="Scene" style={{ width: '100%', borderRadius: '4px', marginBottom: '8px' }} />
-                    <div className={`badge badge-${analysis.threatLevel.toLowerCase()}`} style={{ marginBottom: '8px' }}>
-                      {analysis.threatLevel}
+                  <div style={{ width: '220px', padding: '4px' }}>
+                    <div style={{ position: 'relative', marginBottom: '12px' }}>
+                      <img 
+                        src={analysis.imageUrl} 
+                        alt="Scene" 
+                        style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '8px' }} 
+                      />
+                      <div style={{ 
+                        position: 'absolute', 
+                        top: '8px', 
+                        right: '8px',
+                        background: 'rgba(0,0,0,0.6)',
+                        backdropFilter: 'blur(4px)',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold',
+                        color: getThreatColor(analysis.threatLevel)
+                      }}>
+                        {Math.round(analysis.threatScore)}% THREAT
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: '#a0a0b8' }}>
+
+                    <h4 style={{ margin: '0 0 4px 0', fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                      {analysis.caseId?.title || "Independent Analysis"}
+                    </h4>
+                    
+                    <div style={{ display: 'flex', gap: '6px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                      <span className={`badge badge-${analysis.threatLevel.toLowerCase()}`} style={{ fontSize: '0.65rem', padding: '2px 6px' }}>
+                        {analysis.threatLevel}
+                      </span>
+                      {analysis.forensicReport?.crimeType && (
+                        <span style={{ fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
+                          {analysis.forensicReport.crimeType}
+                        </span>
+                      )}
+                    </div>
+
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', borderTop: '1px solid var(--glass-border)', paddingTop: '8px' }}>
                       {new Date(analysis.createdAt).toLocaleString()}
                     </div>
                   </div>

@@ -73,7 +73,8 @@ const getAnalyses = async (req, res) => {
       .sort('-createdAt')
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
-      .populate('analyzedBy', 'name');
+      .populate('analyzedBy', 'name')
+      .populate('caseId', 'title');
 
     const total = await Analysis.countDocuments(query);
 
