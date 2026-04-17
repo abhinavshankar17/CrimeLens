@@ -51,82 +51,106 @@ const DashboardPage = () => {
   })).filter(d => d.value > 0);
 
   return (
-    <div className="grid-container">
+    <div className="grid-container animate-slide-up">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Intelligence Dashboard</h1>
-          <p className="page-subtitle">Platform-wide analytics and threat metrics.</p>
+          <h1 className="page-title">Forensic Intelligence Dashboard</h1>
+          <p className="page-subtitle">Real-time crime analytics and homicide case metrics across the jurisdiction.</p>
         </div>
       </div>
 
       {/* Stats Row */}
-      <div className="stats-row">
-        <div className="glass-card stat-card">
-          <div className="stat-header">Total Analyses</div>
-          <div className="stat-value">{countTotal}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+        <div className="glass-card" style={{ padding: '1.5rem', borderLeft: '4px solid var(--accent-cyan)' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Total Evidence</div>
+          <div style={{ fontSize: '2rem', fontWeight: '800' }}>{countTotal}</div>
         </div>
-        <div className="glass-card stat-card">
-          <div className="stat-header">Average Threat Score</div>
-          <div className="stat-value" style={{ color: stats.averageThreatScore > 60 ? 'var(--threat-high)' : 'var(--threat-medium)' }}>
-            {stats.averageThreatScore}
+        <div className="glass-card" style={{ padding: '1.5rem', borderLeft: '4px solid var(--threat-high)' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Avg. Threat Score</div>
+          <div style={{ fontSize: '2rem', fontWeight: '800', color: stats.averageThreatScore > 70 ? 'var(--threat-critical)' : 'var(--threat-high)' }}>
+            {stats.averageThreatScore}%
           </div>
         </div>
-        <div className="glass-card stat-card">
-          <div className="stat-header">Critical Alerts</div>
-          <div className="stat-value" style={{ color: 'var(--threat-critical)' }}>
+        <div className="glass-card" style={{ padding: '1.5rem', borderLeft: '4px solid var(--threat-critical)' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Active Homicides</div>
+          <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--threat-critical)' }}>
             {stats.threatDistribution.CRITICAL || 0}
           </div>
         </div>
-        <div className="glass-card stat-card">
-          <div className="stat-header">Recent Incidents</div>
-          <div className="stat-value">{stats.recentAnalyses.length}</div>
+        <div className="glass-card" style={{ padding: '1.5rem', borderLeft: '4px solid var(--accent-purple)' }}>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Analytic Patterns</div>
+          <div style={{ fontSize: '2rem', fontWeight: '800' }}>{stats.recentAnalyses.length}</div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
         {/* Threat Distribution */}
         <div className="glass-card" style={{ padding: '2rem' }}>
-          <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>Threat Level Distribution</h3>
-          <div style={{ height: '300px' }}>
+          <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+             <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--threat-critical)' }}></div>
+             Threat Severity Profile
+          </h3>
+          <div style={{ height: '350px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={threatData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={5}
+                  innerRadius={80}
+                  outerRadius={120}
+                  paddingAngle={8}
                   dataKey="value"
-                  label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
                   {threatData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[entry.name] || '#8884d8'} />
+                    <Cell key={`cell-${index}`} fill={COLORS[entry.name]} stroke="none" />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)' }} />
+                <Tooltip 
+                  contentStyle={{ background: '#12121a', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
+                  itemStyle={{ color: 'var(--text-primary)' }}
+                />
               </PieChart>
             </ResponsiveContainer>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+            {threatData.map((d, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: COLORS[d.name] }}></div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{d.name}</span>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Top Objects */}
         <div className="glass-card" style={{ padding: '2rem' }}>
-          <h3 style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>Top Detected Objects</h3>
-          <div style={{ height: '300px' }}>
+          <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-cyan)' }}></div>
+            Detected Forensic Elements
+          </h3>
+          <div style={{ height: '380px' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stats.topDetectedObjects} layout="vertical" margin={{ left: 40, right: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
-                <XAxis type="number" stroke="#a0a0b8" />
-                <YAxis dataKey="class" type="category" stroke="#a0a0b8" style={{textTransform: 'capitalize'}} />
-                <Tooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)' }} />
-                <Bar dataKey="count" fill="var(--accent-cyan)" radius={[0, 4, 4, 0]} />
+              <BarChart data={stats.topDetectedObjects} layout="vertical" margin={{ left: 20, right: 30, top: 20, bottom: 20 }}>
+                <XAxis type="number" hide />
+                <YAxis 
+                  dataKey="class" 
+                  type="category" 
+                  stroke="#a0a0b8" 
+                  fontSize={12}
+                  width={100}
+                  tickFormatter={(val) => val.charAt(0).toUpperCase() + val.slice(1)}
+                />
+                <Tooltip 
+                  cursor={{fill: 'rgba(255,255,255,0.05)'}} 
+                  contentStyle={{ background: '#12121a', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
+                />
+                <Bar dataKey="count" fill="var(--accent-cyan)" radius={[0, 4, 4, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

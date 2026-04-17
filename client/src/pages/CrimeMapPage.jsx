@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import { AlertTriangle } from 'lucide-react';
 import PatternAlert from '../components/PatternAlert';
 import { analysisService } from '../services/api';
 
@@ -15,32 +16,42 @@ const CrimeMapPage = () => {
   const [analyses, setAnalyses] = useState([]);
   const [patterns, setPatterns] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [mapCenter, setMapCenter] = useState([40.7128, -74.0060]); // Default NYC
-  const [offset, setOffset] = useState([0, 0]); // [latOffset, lngOffset]
+  const [locating, setLocating] = useState(true);
+  const [mapCenter, setMapCenter] = useState(null); 
+  const [offset, setOffset] = useState([0, 0]);
 
   useEffect(() => {
-    // 1. Fetch Location first
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
-          setMapCenter([userLat, userLng]);
-          
-          // Calculate offset to mathematically shift our existing NYC-based database to user's locality
-          setOffset([userLat - 40.7128, userLng - (-74.0060)]);
-        },
-        (error) => {
-          console.error("Geolocation blocked or failed. Defaulting to NYC.");
-        }
-      );
-    }
+    // 1. Resolve Location first to prevent jump
+    const resolveLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            setMapCenter([userLat, userLng]);
+            setOffset([userLat - 40.7128, userLng - (-74.0060)]);
+            setLocating(false);
+          },
+          (error) => {
+            console.error("Geolocation failed. Defaulting to NYC.");
+            setMapCenter([40.7128, -74.0060]);
+            setLocating(false);
+          },
+          { timeout: 5000 }
+        );
+      } else {
+        setMapCenter([40.7128, -74.0060]);
+        setLocating(false);
+      }
+    };
+
+    resolveLocation();
 
     // 2. Fetch Data
     const fetchData = async () => {
       try {
         const [analysisRes, patternRes] = await Promise.all([
-          analysisService.getAll({ limit: 100 }), // get enough for map
+          analysisService.getAll({ limit: 100 }),
           analysisService.getPatterns()
         ]);
         setAnalyses(analysisRes.data.analyses);
@@ -68,12 +79,53 @@ const CrimeMapPage = () => {
     return [lat + offset[0], lng + offset[1]];
   };
 
+  if (locating) {
+    return (
+      <div style={{ 
+        height: 'calc(100vh - 70px)', 
+        width: '100%', 
+        display: 'flex', 
+        flexDirection: 'column',
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)'
+      }}>
+        <div className="spinner" style={{ width: '40px', height: '40px', marginBottom: '1.5rem' }}></div>
+        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--accent-cyan)' }} className="animate-pulse">
+          Initializing Forensic Grid...
+        </div>
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
+          Triangulating jurisdictional coordinates...
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)' }}>
-      {/* Alerts Overlay */}
+    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 70px)', position: 'relative' }}>
+      {/* Forensic Alerts Overlay */}
       <div style={{
         position: 'absolute', top: '90px', left: '20px', right: '20px', zIndex: 1000, pointerEvents: 'none'
       }}>
+        {patterns.length > 0 && (
+          <div style={{ 
+            background: 'rgba(239, 68, 68, 0.15)', 
+            backdropFilter: 'blur(10px)',
+            border: '1px solid var(--threat-critical)',
+            borderRadius: '8px', 
+            padding: '1rem',
+            marginBottom: '1rem',
+            pointerEvents: 'auto',
+            maxWidth: '450px',
+            animation: 'flash 2s infinite'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--threat-critical)' }}>
+              <AlertTriangle size={20} />
+              <strong style={{ fontSize: '0.9rem', letterSpacing: '1px' }}>HOMICIDE CLUSTER DETECTED</strong>
+            </div>
+          </div>
+        )}
         {patterns.map((p, i) => (
           <div key={i} style={{ pointerEvents: 'auto', maxWidth: '600px' }}>
             <PatternAlert pattern={p} />
@@ -89,11 +141,11 @@ const CrimeMapPage = () => {
         padding: '1rem 2rem', display: 'flex', gap: '3rem', whiteSpace: 'nowrap'
       }}>
         <div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Incidents</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Evidentiary Points</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="mono">{analyses.length}</div>
         </div>
         <div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Active Hotspots</div>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Active Homicide Zones</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--threat-high)' }} className="mono">{patterns.length}</div>
         </div>
       </div>
