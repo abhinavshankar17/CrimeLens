@@ -47,265 +47,265 @@ async function seed() {
     // Seed Criminal Records (15 suspects)
     const criminals = [
       {
-        name: 'Victor "Viper" Salazar',
-        alias: 'The Viper',
+        name: 'Vikram "Naag" Saluja',
+        alias: 'Naag',
         age: 34,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Assault', date: new Date('2024-03-15'), description: 'Aggravated assault with deadly weapon at nightclub', location: { type: 'Point', coordinates: [-73.987, 40.755] }, convicted: true },
-          { crimeType: 'Homicide', date: new Date('2025-08-22'), description: 'Second-degree murder in alleyway - stabbing', location: { type: 'Point', coordinates: [-73.990, 40.760] }, convicted: false }
+          { crimeType: 'Assault', date: new Date('2024-03-15'), description: 'Aggravated assault with deadly weapon at nightclub in Connaught Place', location: { type: 'Point', coordinates: [77.2195, 28.6315] }, convicted: true },
+          { crimeType: 'Homicide', date: new Date('2025-08-22'), description: 'Second-degree murder in alleyway - stabbing near Chandni Chowk', location: { type: 'Point', coordinates: [77.2307, 28.6506] }, convicted: false }
         ],
         modusOperandi: ['nighttime attacks', 'uses knife', 'targets isolated victims', 'alleyway ambush'],
         associatedWeapons: ['knife', 'switchblade'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.988, 40.757] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2250, 28.6400] },
         status: 'wanted',
         dangerLevel: 'extreme',
-        physicalDescription: { height: '6\'1"', weight: '195 lbs', distinguishingMarks: ['Snake tattoo on neck', 'Scar across left cheek'] }
+        physicalDescription: { height: '5\'11"', weight: '88 kg', distinguishingMarks: ['Snake tattoo on neck', 'Scar across left cheek'] }
       },
       {
-        name: 'Marcus "Ghost" Thompson',
-        alias: 'Ghost',
+        name: 'Mohit "Bhoot" Thakur',
+        alias: 'Bhoot',
         age: 28,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Robbery', date: new Date('2024-06-10'), description: 'Armed robbery of convenience store', location: { type: 'Point', coordinates: [-73.975, 40.765] }, convicted: true },
-          { crimeType: 'Theft', date: new Date('2025-01-14'), description: 'Grand larceny - jewelry heist', location: { type: 'Point', coordinates: [-73.982, 40.758] }, convicted: false },
-          { crimeType: 'Assault', date: new Date('2025-05-30'), description: 'Assault during robbery attempt', location: { type: 'Point', coordinates: [-73.980, 40.762] }, convicted: false }
+          { crimeType: 'Robbery', date: new Date('2024-06-10'), description: 'Armed robbery of jewellery shop in Karol Bagh', location: { type: 'Point', coordinates: [77.1900, 28.6519] }, convicted: true },
+          { crimeType: 'Theft', date: new Date('2025-01-14'), description: 'Grand larceny - gold heist from Sadar Bazaar', location: { type: 'Point', coordinates: [77.2060, 28.6560] }, convicted: false },
+          { crimeType: 'Assault', date: new Date('2025-05-30'), description: 'Assault during robbery attempt in Paharganj', location: { type: 'Point', coordinates: [77.2130, 28.6440] }, convicted: false }
         ],
         modusOperandi: ['armed holdup', 'wears mask', 'targets small businesses', 'quick getaway'],
         associatedWeapons: ['gun', 'pistol'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.978, 40.760] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2050, 28.6500] },
         status: 'wanted',
         dangerLevel: 'high',
-        physicalDescription: { height: '5\'10"', weight: '170 lbs', distinguishingMarks: ['Teardrop tattoo under right eye'] }
+        physicalDescription: { height: '5\'10"', weight: '77 kg', distinguishingMarks: ['Teardrop tattoo under right eye'] }
       },
       {
-        name: 'Elena Vasquez',
-        alias: 'La Sombra',
+        name: 'Priya Sharma',
+        alias: 'Pari',
         age: 31,
         gender: 'Female',
         photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Arson', date: new Date('2024-11-03'), description: 'Set fire to rival warehouse', location: { type: 'Point', coordinates: [-73.992, 40.750] }, convicted: true },
-          { crimeType: 'Burglary', date: new Date('2025-04-18'), description: 'Break-in at corporate office', location: { type: 'Point', coordinates: [-73.985, 40.752] }, convicted: false }
+          { crimeType: 'Arson', date: new Date('2024-11-03'), description: 'Set fire to rival warehouse in Okhla Industrial Area', location: { type: 'Point', coordinates: [77.2710, 28.5310] }, convicted: true },
+          { crimeType: 'Burglary', date: new Date('2025-04-18'), description: 'Break-in at corporate office in Nehru Place', location: { type: 'Point', coordinates: [77.2510, 28.5490] }, convicted: false }
         ],
         modusOperandi: ['uses accelerant', 'nighttime operations', 'sophisticated entry', 'fire as distraction'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.989, 40.751] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2600, 28.5400] },
         status: 'under_surveillance',
         dangerLevel: 'high',
-        physicalDescription: { height: '5\'6"', weight: '130 lbs', distinguishingMarks: ['Rose tattoo on right forearm'] }
+        physicalDescription: { height: '5\'5"', weight: '58 kg', distinguishingMarks: ['Rose tattoo on right forearm'] }
       },
       {
-        name: 'Dmitri Volkov',
-        alias: 'The Hammer',
+        name: 'Baldev "Hathoda" Singh',
+        alias: 'Hathoda',
         age: 42,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Homicide', date: new Date('2023-07-19'), description: 'Contract killing - blunt force trauma', location: { type: 'Point', coordinates: [-73.970, 40.768] }, convicted: false },
-          { crimeType: 'Assault', date: new Date('2024-02-28'), description: 'Brutal beating of witness', location: { type: 'Point', coordinates: [-73.972, 40.770] }, convicted: true },
-          { crimeType: 'Homicide', date: new Date('2025-09-15'), description: 'Suspected in body found at industrial zone', location: { type: 'Point', coordinates: [-73.968, 40.766] }, convicted: false }
+          { crimeType: 'Homicide', date: new Date('2023-07-19'), description: 'Contract killing - blunt force trauma in Wazirpur Industrial Area', location: { type: 'Point', coordinates: [77.1650, 28.6970] }, convicted: false },
+          { crimeType: 'Assault', date: new Date('2024-02-28'), description: 'Brutal beating of witness in Burari', location: { type: 'Point', coordinates: [77.1920, 28.7540] }, convicted: true },
+          { crimeType: 'Homicide', date: new Date('2025-09-15'), description: 'Suspected in body found at Bawana Industrial Zone', location: { type: 'Point', coordinates: [77.0510, 28.7930] }, convicted: false }
         ],
         modusOperandi: ['blunt force', 'industrial areas', 'body disposal', 'nighttime operations'],
         associatedWeapons: ['hammer', 'bat'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.971, 40.769] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.1700, 28.7000] },
         status: 'wanted',
         dangerLevel: 'extreme',
-        physicalDescription: { height: '6\'3"', weight: '230 lbs', distinguishingMarks: ['Broken nose', 'Barbed wire tattoo on both arms'] }
+        physicalDescription: { height: '6\'1"', weight: '105 kg', distinguishingMarks: ['Broken nose', 'Barbed wire tattoo on both arms'] }
       },
       {
-        name: 'James "Slick" Porter',
-        alias: 'Slick',
+        name: 'Jai "Chikna" Patel',
+        alias: 'Chikna',
         age: 26,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Theft', date: new Date('2024-09-05'), description: 'Pickpocketing ring leader', location: { type: 'Point', coordinates: [-73.985, 40.758] }, convicted: true },
-          { crimeType: 'Burglary', date: new Date('2025-03-22'), description: 'Break-in at luxury apartment', location: { type: 'Point', coordinates: [-73.983, 40.756] }, convicted: false }
+          { crimeType: 'Theft', date: new Date('2024-09-05'), description: 'Pickpocketing ring leader at India Gate tourist area', location: { type: 'Point', coordinates: [77.2295, 28.6129] }, convicted: true },
+          { crimeType: 'Burglary', date: new Date('2025-03-22'), description: 'Break-in at luxury apartment in Greater Kailash', location: { type: 'Point', coordinates: [77.2430, 28.5490] }, convicted: false }
         ],
         modusOperandi: ['sleight of hand', 'crowded areas', 'targets tourists', 'electronic lockpick'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.984, 40.757] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2350, 28.5800] },
         status: 'released',
         dangerLevel: 'low',
-        physicalDescription: { height: '5\'8"', weight: '155 lbs', distinguishingMarks: ['None visible'] }
+        physicalDescription: { height: '5\'7"', weight: '68 kg', distinguishingMarks: ['None visible'] }
       },
       {
-        name: 'Rasheed "Blade" Al-Farsi',
-        alias: 'Blade',
+        name: 'Ranjeet "Chhura" Yadav',
+        alias: 'Chhura',
         age: 37,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Assault', date: new Date('2024-01-20'), description: 'Knife attack in transit station', location: { type: 'Point', coordinates: [-73.993, 40.743] }, convicted: true },
-          { crimeType: 'Assault', date: new Date('2025-06-11'), description: 'Stabbing outside bar', location: { type: 'Point', coordinates: [-73.990, 40.745] }, convicted: false }
+          { crimeType: 'Assault', date: new Date('2024-01-20'), description: 'Knife attack at Rajiv Chowk Metro Station', location: { type: 'Point', coordinates: [77.2182, 28.6328] }, convicted: true },
+          { crimeType: 'Assault', date: new Date('2025-06-11'), description: 'Stabbing outside dhaba in Sarai Kale Khan', location: { type: 'Point', coordinates: [77.2550, 28.5880] }, convicted: false }
         ],
         modusOperandi: ['knife attacks', 'transit areas', 'targets at night', 'bladed weapon'],
         associatedWeapons: ['knife', 'machete'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.991, 40.744] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2350, 28.6100] },
         status: 'wanted',
         dangerLevel: 'extreme',
-        physicalDescription: { height: '5\'11"', weight: '185 lbs', distinguishingMarks: ['Knife scar on right hand', 'Crescent moon tattoo on chest'] }
+        physicalDescription: { height: '5\'10"', weight: '82 kg', distinguishingMarks: ['Knife scar on right hand', 'Crescent moon tattoo on chest'] }
       },
       {
-        name: 'Angela "Ice" Chen',
-        alias: 'Ice',
+        name: 'Ananya "Baraf" Kapoor',
+        alias: 'Baraf',
         age: 29,
         gender: 'Female',
         photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Suspicious Activity', date: new Date('2024-12-01'), description: 'Surveillance and stalking of corporate targets', location: { type: 'Point', coordinates: [-73.978, 40.763] }, convicted: false },
-          { crimeType: 'Theft', date: new Date('2025-07-05'), description: 'Corporate espionage and data theft', location: { type: 'Point', coordinates: [-73.976, 40.761] }, convicted: false }
+          { crimeType: 'Suspicious Activity', date: new Date('2024-12-01'), description: 'Surveillance and stalking of corporate targets in Cyber City Gurgaon', location: { type: 'Point', coordinates: [77.0880, 28.4949] }, convicted: false },
+          { crimeType: 'Theft', date: new Date('2025-07-05'), description: 'Corporate espionage and data theft from Noida IT park', location: { type: 'Point', coordinates: [77.3100, 28.5800] }, convicted: false }
         ],
         modusOperandi: ['surveillance', 'social engineering', 'electronic intrusion', 'disguise'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.977, 40.762] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2000, 28.5400] },
         status: 'under_surveillance',
         dangerLevel: 'moderate',
-        physicalDescription: { height: '5\'5"', weight: '120 lbs', distinguishingMarks: ['Changes appearance frequently'] }
+        physicalDescription: { height: '5\'4"', weight: '55 kg', distinguishingMarks: ['Changes appearance frequently'] }
       },
       {
-        name: 'Terrance "Big T" Williams',
-        alias: 'Big T',
+        name: 'Tarun "Tanker" Gill',
+        alias: 'Tanker',
         age: 39,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Robbery', date: new Date('2023-11-17'), description: 'Bank robbery - armed and masked', location: { type: 'Point', coordinates: [-73.982, 40.753] }, convicted: true },
-          { crimeType: 'Homicide', date: new Date('2024-08-09'), description: 'Shooting during botched robbery', location: { type: 'Point', coordinates: [-73.980, 40.755] }, convicted: false },
-          { crimeType: 'Robbery', date: new Date('2025-02-14'), description: 'Armed carjacking', location: { type: 'Point', coordinates: [-73.979, 40.754] }, convicted: false }
+          { crimeType: 'Robbery', date: new Date('2023-11-17'), description: 'Bank robbery - armed and masked at SBI branch in Dwarka', location: { type: 'Point', coordinates: [77.0420, 28.5920] }, convicted: true },
+          { crimeType: 'Homicide', date: new Date('2024-08-09'), description: 'Shooting during botched robbery in Janakpuri', location: { type: 'Point', coordinates: [77.0850, 28.6210] }, convicted: false },
+          { crimeType: 'Robbery', date: new Date('2025-02-14'), description: 'Armed carjacking on NH-48 highway', location: { type: 'Point', coordinates: [77.0600, 28.5700] }, convicted: false }
         ],
         modusOperandi: ['armed robbery', 'uses gun', 'getaway vehicle', 'daytime attacks'],
         associatedWeapons: ['gun', 'rifle'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.981, 40.754] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.0700, 28.5900] },
         status: 'wanted',
         dangerLevel: 'extreme',
-        physicalDescription: { height: '6\'4"', weight: '260 lbs', distinguishingMarks: ['Full sleeve tattoos both arms', 'Gold front tooth'] }
+        physicalDescription: { height: '6\'2"', weight: '115 kg', distinguishingMarks: ['Full sleeve tattoos both arms', 'Gold front tooth'] }
       },
       {
-        name: 'Sofia Moretti',
+        name: 'Savita Devi Rawat',
         alias: 'The Widow',
         age: 45,
         gender: 'Female',
         photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Homicide', date: new Date('2022-05-30'), description: 'Suspected poisoning of spouse', location: { type: 'Point', coordinates: [-73.965, 40.770] }, convicted: false },
-          { crimeType: 'Suspicious Activity', date: new Date('2024-10-12'), description: 'Insurance fraud linked to suspicious death', location: { type: 'Point', coordinates: [-73.967, 40.772] }, convicted: false }
+          { crimeType: 'Homicide', date: new Date('2022-05-30'), description: 'Suspected poisoning of spouse in Defence Colony', location: { type: 'Point', coordinates: [77.2330, 28.5730] }, convicted: false },
+          { crimeType: 'Suspicious Activity', date: new Date('2024-10-12'), description: 'Insurance fraud linked to suspicious death in Vasant Kunj', location: { type: 'Point', coordinates: [77.1560, 28.5200] }, convicted: false }
         ],
         modusOperandi: ['poison', 'targets partners', 'insurance fraud', 'patience'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.966, 40.771] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.1900, 28.5450] },
         status: 'under_surveillance',
         dangerLevel: 'high',
-        physicalDescription: { height: '5\'7"', weight: '140 lbs', distinguishingMarks: ['None visible — blends into high society'] }
+        physicalDescription: { height: '5\'5"', weight: '63 kg', distinguishingMarks: ['None visible — blends into high society'] }
       },
       {
-        name: 'Jamal "Torch" Davis',
-        alias: 'Torch',
+        name: 'Deepak "Aag" Mehra',
+        alias: 'Aag',
         age: 24,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Arson', date: new Date('2024-07-04'), description: 'Set fire to abandoned building', location: { type: 'Point', coordinates: [-73.995, 40.748] }, convicted: true },
-          { crimeType: 'Arson', date: new Date('2025-01-20'), description: 'Vehicle arson in parking structure', location: { type: 'Point', coordinates: [-73.993, 40.746] }, convicted: false },
-          { crimeType: 'Vandalism', date: new Date('2025-08-01'), description: 'Property destruction by fire', location: { type: 'Point', coordinates: [-73.994, 40.747] }, convicted: false }
+          { crimeType: 'Arson', date: new Date('2024-07-04'), description: 'Set fire to abandoned godown in Mundka Industrial Area', location: { type: 'Point', coordinates: [77.0290, 28.6830] }, convicted: true },
+          { crimeType: 'Arson', date: new Date('2025-01-20'), description: 'Vehicle arson in multi-level parking, Rajouri Garden', location: { type: 'Point', coordinates: [77.1210, 28.6490] }, convicted: false },
+          { crimeType: 'Vandalism', date: new Date('2025-08-01'), description: 'Property destruction by fire in Narela', location: { type: 'Point', coordinates: [77.0930, 28.8520] }, convicted: false }
         ],
         modusOperandi: ['fire', 'accelerant', 'abandoned structures', 'vehicles', 'nighttime'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.994, 40.747] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.0800, 28.7200] },
         status: 'released',
         dangerLevel: 'high',
-        physicalDescription: { height: '5\'9"', weight: '165 lbs', distinguishingMarks: ['Burn scars on both hands', 'Flame tattoo on forearm'] }
+        physicalDescription: { height: '5\'8"', weight: '72 kg', distinguishingMarks: ['Burn scars on both hands', 'Flame tattoo on forearm'] }
       },
       {
-        name: 'Nikolai Petrov',
+        name: 'Dr. Naresh "Jarrrah" Pandey',
         alias: 'The Surgeon',
         age: 50,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Homicide', date: new Date('2021-12-15'), description: 'Precision killing — surgical tools used', location: { type: 'Point', coordinates: [-73.960, 40.775] }, convicted: false },
-          { crimeType: 'Homicide', date: new Date('2023-09-03'), description: 'Body found with surgical wounds', location: { type: 'Point', coordinates: [-73.962, 40.773] }, convicted: false },
-          { crimeType: 'Assault', date: new Date('2025-04-07'), description: 'Kidnapping and assault of witness', location: { type: 'Point', coordinates: [-73.961, 40.774] }, convicted: false }
+          { crimeType: 'Homicide', date: new Date('2021-12-15'), description: 'Precision killing — surgical tools used, body found near AIIMS flyover', location: { type: 'Point', coordinates: [77.2090, 28.5670] }, convicted: false },
+          { crimeType: 'Homicide', date: new Date('2023-09-03'), description: 'Body found with surgical wounds in Yamuna floodplain', location: { type: 'Point', coordinates: [77.2780, 28.6130] }, convicted: false },
+          { crimeType: 'Assault', date: new Date('2025-04-07'), description: 'Kidnapping and assault of witness in Rohini', location: { type: 'Point', coordinates: [77.1170, 28.7360] }, convicted: false }
         ],
         modusOperandi: ['surgical precision', 'clean cuts', 'body disposal', 'medical knowledge', 'kidnapping'],
         associatedWeapons: ['knife', 'scalpel'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.961, 40.774] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2000, 28.6400] },
         status: 'wanted',
         dangerLevel: 'extreme',
-        physicalDescription: { height: '5\'11"', weight: '175 lbs', distinguishingMarks: ['Graying temples', 'Wears surgical gloves'] }
+        physicalDescription: { height: '5\'10"', weight: '78 kg', distinguishingMarks: ['Graying temples', 'Wears surgical gloves'] }
       },
       {
-        name: 'Deshawn "Wheels" Carter',
-        alias: 'Wheels',
+        name: 'Arjun "Phatak" Chauhan',
+        alias: 'Phatak',
         age: 22,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Theft', date: new Date('2025-02-10'), description: 'Vehicle theft ring operator', location: { type: 'Point', coordinates: [-73.988, 40.749] }, convicted: false },
-          { crimeType: 'Robbery', date: new Date('2025-06-18'), description: 'Smash-and-grab at electronics store', location: { type: 'Point', coordinates: [-73.986, 40.751] }, convicted: false }
+          { crimeType: 'Theft', date: new Date('2025-02-10'), description: 'Vehicle theft ring operator in South Delhi', location: { type: 'Point', coordinates: [77.2280, 28.5310] }, convicted: false },
+          { crimeType: 'Robbery', date: new Date('2025-06-18'), description: 'Smash-and-grab at electronics store in Lajpat Nagar', location: { type: 'Point', coordinates: [77.2380, 28.5690] }, convicted: false }
         ],
         modusOperandi: ['vehicle theft', 'smash and grab', 'getaway driver', 'uses motorcycle'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.987, 40.750] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2330, 28.5500] },
         status: 'wanted',
         dangerLevel: 'moderate',
-        physicalDescription: { height: '5\'7"', weight: '150 lbs', distinguishingMarks: ['Racing stripe tattoo on collarbone'] }
+        physicalDescription: { height: '5\'6"', weight: '65 kg', distinguishingMarks: ['Racing stripe tattoo on collarbone'] }
       },
       {
-        name: 'Isabelle "Venom" Dumont',
-        alias: 'Venom',
+        name: 'Kavita "Zeher" Malhotra',
+        alias: 'Zeher',
         age: 33,
         gender: 'Female',
         photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Assault', date: new Date('2024-04-22'), description: 'Poisoned drinks at social event', location: { type: 'Point', coordinates: [-73.975, 40.758] }, convicted: false },
-          { crimeType: 'Homicide', date: new Date('2025-03-11'), description: 'Suspected lethal poisoning at restaurant', location: { type: 'Point', coordinates: [-73.977, 40.760] }, convicted: false }
+          { crimeType: 'Assault', date: new Date('2024-04-22'), description: 'Poisoned drinks at social event in Hauz Khas Village', location: { type: 'Point', coordinates: [77.2050, 28.5530] }, convicted: false },
+          { crimeType: 'Homicide', date: new Date('2025-03-11'), description: 'Suspected lethal poisoning at upscale restaurant in Khan Market', location: { type: 'Point', coordinates: [77.2270, 28.5990] }, convicted: false }
         ],
         modusOperandi: ['poison', 'social settings', 'trusted by victims', 'chemical compounds'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.976, 40.759] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2150, 28.5760] },
         status: 'under_surveillance',
         dangerLevel: 'high',
-        physicalDescription: { height: '5\'8"', weight: '135 lbs', distinguishingMarks: ['Always wears rings', 'Chemical burn on left wrist'] }
+        physicalDescription: { height: '5\'6"', weight: '60 kg', distinguishingMarks: ['Always wears rings', 'Chemical burn on left wrist'] }
       },
       {
-        name: 'Roberto "El Lobo" Gutierrez',
-        alias: 'El Lobo',
+        name: 'Harpreet "Sher" Sandhu',
+        alias: 'Sher',
         age: 41,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1548372290-8d01b6c8e78c?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Robbery', date: new Date('2023-10-05'), description: 'Armed robbery of armored truck', location: { type: 'Point', coordinates: [-73.998, 40.742] }, convicted: true },
-          { crimeType: 'Assault', date: new Date('2024-05-17'), description: 'Assault on security guard during heist', location: { type: 'Point', coordinates: [-73.996, 40.744] }, convicted: true },
-          { crimeType: 'Robbery', date: new Date('2025-10-01'), description: 'Attempted bank heist', location: { type: 'Point', coordinates: [-73.997, 40.743] }, convicted: false }
+          { crimeType: 'Robbery', date: new Date('2023-10-05'), description: 'Armed robbery of cash van on GT Karnal Road', location: { type: 'Point', coordinates: [77.1460, 28.7370] }, convicted: true },
+          { crimeType: 'Assault', date: new Date('2024-05-17'), description: 'Assault on security guard during warehouse heist in Naraina', location: { type: 'Point', coordinates: [77.1430, 28.6310] }, convicted: true },
+          { crimeType: 'Robbery', date: new Date('2025-10-01'), description: 'Attempted bank heist at PNB branch in Pitampura', location: { type: 'Point', coordinates: [77.1380, 28.6970] }, convicted: false }
         ],
         modusOperandi: ['armed heists', 'team operations', 'armored vehicles', 'uses gun'],
         associatedWeapons: ['gun', 'pistol', 'rifle'],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.997, 40.743] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.1400, 28.6900] },
         status: 'released',
         dangerLevel: 'extreme',
-        physicalDescription: { height: '6\'0"', weight: '210 lbs', distinguishingMarks: ['Wolf tattoo on back', 'Missing left pinky finger'] }
+        physicalDescription: { height: '6\'0"', weight: '95 kg', distinguishingMarks: ['Lion tattoo on back', 'Missing left pinky finger'] }
       },
       {
-        name: 'Kenji Tanaka',
-        alias: 'Silent',
+        name: 'Suraj "Saaya" Nair',
+        alias: 'Saaya',
         age: 36,
         gender: 'Male',
         photo: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=200&q=80',
         knownCrimes: [
-          { crimeType: 'Burglary', date: new Date('2024-08-14'), description: 'Silent break-in at museum — art theft', location: { type: 'Point', coordinates: [-73.963, 40.779] }, convicted: false },
-          { crimeType: 'Suspicious Activity', date: new Date('2025-05-22'), description: 'Surveillance of high-value targets', location: { type: 'Point', coordinates: [-73.965, 40.777] }, convicted: false }
+          { crimeType: 'Burglary', date: new Date('2024-08-14'), description: 'Silent break-in at National Museum — artifact theft', location: { type: 'Point', coordinates: [77.2190, 28.6110] }, convicted: false },
+          { crimeType: 'Suspicious Activity', date: new Date('2025-05-22'), description: 'Surveillance of high-value targets in Lutyens Delhi', location: { type: 'Point', coordinates: [77.2100, 28.5950] }, convicted: false }
         ],
         modusOperandi: ['silent entry', 'disables alarms', 'art theft', 'high-value targets', 'nighttime'],
         associatedWeapons: [],
-        lastKnownLocation: { type: 'Point', coordinates: [-73.964, 40.778] },
+        lastKnownLocation: { type: 'Point', coordinates: [77.2140, 28.6030] },
         status: 'wanted',
         dangerLevel: 'moderate',
-        physicalDescription: { height: '5\'9"', weight: '160 lbs', distinguishingMarks: ['Minimalist — no distinguishing marks'] }
+        physicalDescription: { height: '5\'8"', weight: '70 kg', distinguishingMarks: ['Minimalist — no distinguishing marks'] }
       }
     ];
 
