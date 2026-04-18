@@ -2,58 +2,64 @@
 
 CrimeLens is a comprehensive, AI-powered forensic visual analysis and crime intelligence platform. It processes scene imagery through advanced object detection and multimodal large language models to construct accurate, real-time forensic interpretations. The platform features an intelligence dashboard, dynamic geolocated threat mapping, and an automated case management engine.
 
-## System Architecture
+## 🏗️ System Architecture
+
+CrimeLens utilizes a multi-layered microservice architecture designed for high-performance visual reasoning and data persistence.
 
 ```mermaid
-mindmap
-  root((CrimeLens AI))
-    Frontend Client
-      React and Vite
-      Dark Forensic Aesthetic UI
-      Geolocation APIs
-      Recharts Data Visualization
-      Leaflet Crime Mapping
-    Backend Server
-      Node.js and Express
-      MongoDB Database
-      JWT Authentication
-      Custom Scoring Algorithm
-      RESTful APIs
-    YOLOv8 Microservice
-      Python and Flask
-      Ultralytics Engine
-      Real-time Object Detection
-      Coordinate Mapping
-    Groq AI Engine
-      Multimodal Vision Pipeline
-      Llama 4 Scout Model
-      Forensic Scene Reasoning
+graph TD
+    %% Frontend Layer
+    Client[React/Vite Frontend]
+    
+    %% API Layer
+    ExpressServer[Node.js Express Server]
+    
+    %% Microservices
+    YOLO[Python YOLOv8 Service]
+    AIInference[Groq Multimodal AI]
+    
+    %% Database
+    MongoDB[(MongoDB Database)]
+    
+    %% Data Flow
+    Client -- 1. Uploads Image --> ExpressServer
+    ExpressServer -- 2. Raw Image Path --> YOLO
+    YOLO -- 3. Detections/BBoxes --> ExpressServer
+    ExpressServer -- 4. Image + Detections --> AIInference
+    AIInference -- 5. Forensic Reasoning/JSON --> ExpressServer
+    ExpressServer -- 6. Threat Score & Save --> MongoDB
+    MongoDB -- 7. Persisted Analysis --> ExpressServer
+    ExpressServer -- 8. Results & Annotations --> Client
+    
+    %% Side Tasks
+    ExpressServer -- Fetch Suspects --> SuspectService[Suspect Matcher Service]
+    SuspectService -- Semantic Matching --> MongoDB
 ```
 
-## Features
+### Component Breakdown
+- **Client (Frontend)**: A React-based dashboard with Leaflet for mapping, Recharts for analytics, and JSPDF for generating forensic reports.
+- **Backend (Node.js)**: Orchestrates the analysis pipeline, manages JWT authentication, and performs suspect profiling using a composite scoring algorithm.
+- **YOLOv8 Service (Python)**: A Flask microservice running a pre-trained Ultralytics YOLOv8 engine for rapid object detection and coordinate mapping.
+- **AI Inference Engine**: Integrates with Groq's multimodal vision pipeline (`llama-4-scout`) to perform high-level forensic reasoning, anomaly detection, and hallucination correction for YOLO detections.
 
-- **Automated Forensic Analysis**: Processes images via YOLOv8 and Groq's Llama 4 Scout to generate natural-language forensic scene overviews, anomaly detections, and threat assessments.
-- **Dynamic Geospatial Mapping**: Leverages the HTML5 Geolocation API and React-Leaflet to dynamically project clustered incident reports within a local proximity grid relative to the investigator's live location.
-- **Threat Scoring Algorithm**: A custom algorithmic system that weights identified objects and forensic anomaly markers to assign deterministic priority levels (Critical, High, Medium, Low).
-- **Incident & Case Management**: Centralized hub for archiving detected evidence, generating analytical dashboards, and organizing distinct investigation threads.
-- **Fail-Safe Fallback Mechanics**: Backend architecture designed with autonomous mock-data generation fail-over states if auxiliary microservices (YOLO or LLM APIs) drop offline during a demonstration.
+## ✨ Core Features
 
-## Technology Stack
+- **🔴 Live Forensic Monitoring**: Real-time surveillance frame analysis with automated threat alerts and anomaly detection for critical incidents (Assault, Theft, Weapons).
+- **🕵️ Suspect Profiler**: A sophisticated matching engine that cross-references forensic evidence against a criminal database using MO (Modus Operandi) patterns, weapon association, and geospatial proximity.
+- **🗺️ Geospatial Intelligence**: Dynamic interactivity with incident heatmaps using `React-Leaflet`. Tracks and clusters crime patterns within a proximity grid relative to the current location.
+- **📑 Forensic Case Management**: End-to-end case tracking, allowing investigators to group multiple analyses into formal "Cases" with status management (Open, Investigating, Resolved).
+- **📊 Automated PDF Reporting**: Generates professional, court-ready forensic reports including annotated imagery, AI reasoning, suspect match lists, and threat assessments.
+- **⚡ Threat Scoring Algorithm**: Weighs identified objects, forensic markers, and AI-determined confidence to assign deterministic priority levels (Critical to Minimal).
 
-- **Client**: React.js, Vite, Axios, React-Router, React-Leaflet, Recharts. Vanilla CSS for design.
-- **Server**: Node.js, Express.js, Mongoose, Multer (upload processing), JSONWebToken.
-- **Vision Microservice**: Python 3, Flask, Ultralytics (YOLOv8n), Pillow, PyTorch.
-- **AI Inference API**: Groq Cloud SDK (running `meta-llama/llama-4-scout-17b-16e-instruct`).
-- **Database**: MongoDB (Local instance with geosphere computational indexing).
+## 🛠️ Technology Stack
 
-## Prerequisites
+- **Client**: React.js, Vite, Axios, React-Leaflet, Recharts, JSPDF, Vanilla CSS.
+- **Server**: Node.js, Express.js, Mongoose, Multer, JSONWebToken.
+- **Vision Microservice**: Python 3, Flask, Ultralytics (YOLOv8n), PyTorch.
+- **AI Inference API**: Groq Cloud SDK (running `meta-llama/llama-4-scout` vision model).
+- **Database**: MongoDB (utilizing 2dsphere indexing for geospatial queries).
 
-- Node.js v18.x or higher
-- Python v3.9 or higher
-- MongoDB instance running locally (port 27017)
-- Groq Cloud API Key
-
-## Installation and Execution
+## 🚀 Installation and Execution
 
 The platform is partitioned into three distinct operational layers.
 
@@ -63,7 +69,7 @@ Navigate to the `yolo-service` directory, install dependencies, and start the Fl
 
 ```bash
 cd yolo-service
-pip install flask flask-cors ultralytics pillow --upgrade
+pip install -r requirements.txt
 python app.py
 ```
 *The service will bind to `http://localhost:5001`. On first execution, the Ultralytics engine will download the pre-trained weights.*
@@ -77,18 +83,18 @@ cd server
 npm install
 ```
 
-Configure your environment variables by checking the `.env` file in the `server` directory:
+Configure your `.env` file with the following variables:
 
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/crimelens
 JWT_SECRET=your_jwt_secret_key
-YOLO_SERVICE_URL=http://localhost:5001
-GROQ_API_KEY=your_groq_api_key_here
+GROQ_API_KEY=your_groq_api_key
 GROQ_MODEL=meta-llama/llama-4-scout-17b-16e-instruct
+YOLO_SERVICE_URL=http://localhost:5001
 ```
 
-Seed the database and start the Node process:
+Seed the database with initial criminal records and start the server:
 
 ```bash
 npm run seed
@@ -106,6 +112,6 @@ npm run dev
 ```
 *The application interface will be served at `http://localhost:5173`.*
 
-## License
+## 📄 License
 
-This architecture was constructed specifically to address capabilities in forensic visual scene-reasoning and integrated spatial intelligence.
+This project is designed for forensic visual scene-reasoning and integrated spatial intelligence research.
