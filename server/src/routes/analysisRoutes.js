@@ -28,6 +28,7 @@ router.get('/', analysisController.getAnalyses);
 
 router.get('/stats', analysisController.getStats);
 router.get('/patterns', analysisController.getPatterns);
+router.get('/:id/suspects', analysisController.getSuspects);
 router.get('/:id', analysisController.getAnalysisById);
 
 module.exports = router;

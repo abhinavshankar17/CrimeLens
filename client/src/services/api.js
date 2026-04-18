@@ -40,6 +40,7 @@ export const analysisService = {
   getById: (id) => api.get(`/analysis/${id}`),
   getStats: () => api.get('/analysis/stats'),
   getPatterns: () => api.get('/analysis/patterns'),
+  getSuspects: (analysisId) => api.get(`/analysis/${analysisId}/suspects`),
 };
 
 export const caseService = {

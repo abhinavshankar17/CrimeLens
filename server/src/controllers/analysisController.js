@@ -2,6 +2,7 @@ const Analysis = require('../models/Analysis');
 const Case = require('../models/Case');
 const { detectObjects } = require('../services/yoloService');
 const { analyzeScene, analyzeLive } = require('../services/geminiService');
+const { matchSuspects } = require('../services/suspectService');
 
 const { calculateThreatScore } = require('../services/scoringService');
 const fs = require('fs');
@@ -229,7 +230,18 @@ const monitor = async (req, res) => {
   }
 };
 
+const getSuspects = async (req, res) => {
+  try {
+    const analysis = await Analysis.findById(req.params.id);
+    if (!analysis) return res.status(404).json({ message: 'Analysis not found' });
 
+    const suspects = await matchSuspects(analysis);
+    res.json({ suspects });
+  } catch (error) {
+    console.error('Suspect matching error:', error);
+    res.status(500).json({ message: 'Error matching suspects', error: error.message });
+  }
+};
 
-module.exports = { analyze, getAnalyses, getAnalysisById, getStats, getPatterns, monitor };
+module.exports = { analyze, getAnalyses, getAnalysisById, getStats, getPatterns, monitor, getSuspects };
 

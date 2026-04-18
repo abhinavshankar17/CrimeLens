@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUploader from '../components/ImageUploader';
 import VideoUploader from '../components/VideoUploader';
 import AnnotatedViewer from '../components/AnnotatedViewer';
 import DetectionList from '../components/DetectionList';
 import ThreatMeter from '../components/ThreatMeter';
 import ForensicReport from '../components/ForensicReport';
+import SuspectProfiler from '../components/SuspectProfiler';
 import LoadingScanner from '../components/LoadingScanner';
 import { analysisService } from '../services/api';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -23,6 +24,24 @@ const AnalyzePage = () => {
   // Video analysis state
   const [isVideoMode, setIsVideoMode] = useState(false);
   const [selectedFrameIdx, setSelectedFrameIdx] = useState(0);
+
+  // Suspect profiler state
+  const [suspects, setSuspects] = useState(null);
+  const [suspectsLoading, setSuspectsLoading] = useState(false);
+
+  // Auto-fetch suspects when analysis completes
+  useEffect(() => {
+    if (analysisResult?._id && !isVideoMode) {
+      setSuspectsLoading(true);
+      analysisService.getSuspects(analysisResult._id)
+        .then(res => setSuspects(res.data.suspects || []))
+        .catch(err => {
+          console.error('Failed to load suspects:', err);
+          setSuspects([]);
+        })
+        .finally(() => setSuspectsLoading(false));
+    }
+  }, [analysisResult?._id, isVideoMode]);
 
   const handleUpload = async (uploadedFile, preview) => {
     setFile(uploadedFile);
@@ -66,6 +85,8 @@ const AnalyzePage = () => {
     setError(null);
     setIsVideoMode(false);
     setSelectedFrameIdx(0);
+    setSuspects(null);
+    setSuspectsLoading(false);
   };
 
   // Get the currently selected frame's data for video mode
@@ -91,7 +112,7 @@ const AnalyzePage = () => {
           {analysisResult && (
             <div style={{ display: 'flex', gap: '1rem' }}>
               <PDFDownloadLink 
-                document={<CaseReportPDF data={analysisResult} imageUrl={previewUrl} />} 
+                document={<CaseReportPDF data={analysisResult} imageUrl={previewUrl} suspects={suspects} />} 
                 fileName={`Forensic_Report_${new Date().getTime()}.pdf`}
                 className="btn-primary"
                 style={{ textDecoration: 'none' }}
@@ -279,6 +300,9 @@ const AnalyzePage = () => {
             <ForensicReport 
               report={isVideoMode && selectedFrame ? selectedFrame.forensicReport : analysisResult.forensicReport} 
             />
+            {!isVideoMode && (
+              <SuspectProfiler suspects={suspects} loading={suspectsLoading} />
+            )}
           </>
         )}
       </div>
